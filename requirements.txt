@@ -1,0 +1,9 @@
+fastapi[all]
+git+https://github.com/akatsuki-v2/shared-modules
+httpx
+pytest
+pytest-asyncio
+pytest-cov
+python-dotenv
+structlog
+uvicorn[standard]

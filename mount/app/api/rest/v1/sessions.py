@@ -18,7 +18,6 @@ SERVICE_URL = "http://users-service"
 oauth2_scheme = HTTPBearer()
 
 
-# https://osuakatsuki.atlassian.net/browse/V2-11
 @router.post("/v1/sessions", response_model=Success[Session])
 async def log_in(args: LoginForm, ctx: RequestContext = Depends()):
     response = await forward_request(ctx,
@@ -28,7 +27,41 @@ async def log_in(args: LoginForm, ctx: RequestContext = Depends()):
     return response
 
 
-# https://osuakatsuki.atlassian.net/browse/V2-12
+@router.delete("/v1/sessions/{session_id}")
+async def log_out(session_id: UUID,
+                  token: HTTPCredentials = Depends(oauth2_scheme),
+                  ctx: RequestContext = Depends()):
+    session = await authenticate(ctx, token.credentials)
+
+    response = await forward_request(ctx,
+                                     method="DELETE",
+                                     url=f"{SERVICE_URL}/v1/sessions/{session_id}")
+    return response
+
+
+@router.get("/v1/sessions/{session_id}", response_model=Success[Session])
+async def get_session(session_id: UUID,
+                      token: HTTPCredentials = Depends(oauth2_scheme),
+                      ctx: RequestContext = Depends()):
+    session = await authenticate(ctx, token.credentials)
+
+    response = await forward_request(ctx,
+                                     method="GET",
+                                     url=f"{SERVICE_URL}/v1/sessions/{session_id}")
+    return response
+
+
+@router.get("/v1/sessions", response_model=Success[list[Session]])
+async def get_sessions(token: HTTPCredentials = Depends(oauth2_scheme),
+                       ctx: RequestContext = Depends()):
+    session = await authenticate(ctx, token.credentials)
+
+    response = await forward_request(ctx,
+                                     method="GET",
+                                     url=f"{SERVICE_URL}/v1/sessions")
+    return response
+
+
 @router.patch("/v1/sessions/{session_id}")
 async def partial_update_session(session_id: UUID,
                                  token: HTTPCredentials = Depends(
@@ -38,18 +71,5 @@ async def partial_update_session(session_id: UUID,
 
     response = await forward_request(ctx,
                                      method="PATCH",
-                                     url=f"{SERVICE_URL}/v1/sessions/{session_id}")
-    return response
-
-
-# https://osuakatsuki.atlassian.net/browse/V2-13
-@router.delete("/v1/sessions/{session_id}")
-async def log_out(session_id: UUID,
-                  token: HTTPCredentials = Depends(oauth2_scheme),
-                  ctx: RequestContext = Depends()):
-    session = await authenticate(ctx, token.credentials)
-
-    response = await forward_request(ctx,
-                                     method="DELETE",
                                      url=f"{SERVICE_URL}/v1/sessions/{session_id}")
     return response

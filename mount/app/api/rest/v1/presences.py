@@ -17,7 +17,6 @@ SERVICE_URL = "http://users-service"
 oauth2_scheme = HTTPBearer()
 
 
-# https://osuakatsuki.atlassian.net/browse/V2-116
 @router.get("/v1/presences/{session_id}", response_model=Success[Presence])
 async def get_presence(session_id: UUID, token: HTTPCredentials = Depends(oauth2_scheme),
                        ctx: RequestContext = Depends()):
@@ -29,7 +28,6 @@ async def get_presence(session_id: UUID, token: HTTPCredentials = Depends(oauth2
     return response
 
 
-# https://osuakatsuki.atlassian.net/browse/V2-116
 @router.get("/v1/presences", response_model=Success[list[Presence]])
 async def get_presences(token: HTTPCredentials = Depends(oauth2_scheme),
                         ctx: RequestContext = Depends()):

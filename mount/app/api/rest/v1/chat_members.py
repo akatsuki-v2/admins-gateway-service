@@ -16,7 +16,6 @@ SERVICE_URL = "http://chat-service"
 oauth2_scheme = HTTPBearer()
 
 
-# https://osuakatsuki.atlassian.net/browse/V2-86
 @router.post("/v1/chats/{chat_id}/members", response_model=Success[Member])
 async def join_chat(chat_id: int, args: MemberInput,
                     token: HTTPCredentials = Depends(oauth2_scheme),
@@ -30,7 +29,6 @@ async def join_chat(chat_id: int, args: MemberInput,
     return response
 
 
-# https://osuakatsuki.atlassian.net/browse/V2-87
 @router.delete("/v1/chats/{chat_id}/members", response_model=Success[Member])
 async def leave_chat(chat_id: int,
                      token: HTTPCredentials = Depends(oauth2_scheme),
@@ -43,7 +41,6 @@ async def leave_chat(chat_id: int,
     return response
 
 
-# https://osuakatsuki.atlassian.net/browse/V2-88
 @router.get("/v1/chats/{chat_id}/members", response_model=Success[list[Member]])
 async def get_chat_members(chat_id: int,
                            token: HTTPCredentials = Depends(oauth2_scheme),
